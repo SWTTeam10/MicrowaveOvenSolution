@@ -36,11 +36,11 @@ namespace Microwave.Test.Integration
         [Test]
         public void StartCooking_TimerSetAt1Sec_DisplayShows1sec()
         {
-            _uut.StartCooking(50, 1000);
+            _uut.StartCooking(50, 1);
 
-            Thread.Sleep(1050);
+            Thread.Sleep(1100);
 
-            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("01:00")));
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("00:59")));
         }
 
     }
