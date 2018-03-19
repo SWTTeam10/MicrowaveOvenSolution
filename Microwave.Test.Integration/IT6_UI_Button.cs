@@ -8,12 +8,10 @@ using MicrowaveOvenClasses.Controllers;
 using MicrowaveOvenClasses.Interfaces;
 using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Microwave.Test.Integration
 {
-    [TestFixture]
-    class IT5_UI_Door
+    class IT6_UI_Button
     {
         private IUserInterface _userInterface;
         private IDoor _door;
@@ -31,10 +29,9 @@ namespace Microwave.Test.Integration
         [SetUp]
         public void SetUp()
         {
-            _powerButton = Substitute.For<IButton>();
-            _startButton = Substitute.For<IButton>();
-            _timerButton = Substitute.For<IButton>();
-
+            _powerButton = new Button();
+            _startButton = new Button();
+            _timerButton = new Button();   
             _door = new Door();
             _timer = new Timer();
             _output = Substitute.For<IOutput>();
@@ -44,22 +41,32 @@ namespace Microwave.Test.Integration
             _light = new Light(_output);
             _userInterface = new UserInterface(_powerButton, _timerButton, _startButton, _door, _display, _light,
                 _cookController);
+
         }
 
         [Test]
-        public void Open_DoorOpen_LightOn()
+        public void PressPowerButton__PowerIsOn__PowerIsDefault50()
         {
-            _door.Open();
-            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("on")));
+            _powerButton.Press();
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("50")));
         }
 
         [Test]
-        public void Close_doorClosed_LightOff()
+        public void PressTimeButton__TimeIsShown__TimeIsDefault1minut()
         {
-            _door.Open();
-            _door.Close();
-            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("off")));
+            _powerButton.Press();
+            _timerButton.Press();
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("01:00")));
         }
 
+        [Test] // hvorfor går testen igennem hvis vi kun har en startbutton.press()
+        public void PressStartCancelButton_StartAllready_DisplayCleared()
+        {
+            _powerButton.Press();
+            _timerButton.Press();
+            _startButton.Press();
+            _startButton.Press();
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+        }
     }
 }

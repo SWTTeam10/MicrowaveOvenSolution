@@ -93,6 +93,7 @@ namespace MicrowaveOvenClasses.Controllers
                     time = 1;
                     myCooker.Stop();
                     myLight.TurnOff();
+                    // er det her der er noget der skal laves om
                     myDisplay.Clear();
                     myState = States.READY;
                     break;
