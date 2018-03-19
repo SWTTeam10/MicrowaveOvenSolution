@@ -20,7 +20,7 @@ namespace Microwave.Test.Integration
         private IDisplay _display;
         private IPowerTube _powerTube;
         private IOutput _output;
-        private ICookController _uut;
+        private ICookController _cookController;
 
 
         [SetUp]
@@ -30,13 +30,13 @@ namespace Microwave.Test.Integration
             _output = Substitute.For<IOutput>();
             _powerTube = new PowerTube(_output);
             _display = new Display(_output);
-            _uut = new CookController(_timer, _display, _powerTube);
+            _cookController = new CookController(_timer, _display, _powerTube);
         }
 
         [Test]
         public void StartCooking_TimerSetAt2Sec_DisplayShows1sec()
         {
-            _uut.StartCooking(50, 2); // Tiden står i sekunder
+            _cookController.StartCooking(50, 2); // Tiden står i sekunder
 
             Thread.Sleep(1050);
 

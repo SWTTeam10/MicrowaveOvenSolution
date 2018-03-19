@@ -20,7 +20,7 @@ namespace Microwave.Test.Integration
         private ITimer _timer;
         private IPowerTube _powerTube;
         private IDisplay _display;
-        private ICookController _uut;
+        private ICookController _cookController;
 
         [SetUp]
         public void SetUp()
@@ -29,14 +29,14 @@ namespace Microwave.Test.Integration
             _timer = Substitute.For<ITimer>();
             _powerTube = new PowerTube(_output);
             _display = Substitute.For<IDisplay>();
-            _uut = new CookController(_timer, _display, _powerTube);
+            _cookController = new CookController(_timer, _display, _powerTube);
         }
 
 
         [TestCase(60,10)]
         public void Start_Start_OutlineTurnedOff(int power, int time)
         {
-            _uut.StartCooking(power, time);
+            _cookController.StartCooking(power, time);
 
             _output.Received().OutputLine($"PowerTube works with {power} %");
         }
@@ -44,8 +44,8 @@ namespace Microwave.Test.Integration
         [Test]
         public void Stop_StartAndStop_OutlineTurnedOff()
         {
-            _uut.StartCooking(60,10);
-            _uut.Stop();
+            _cookController.StartCooking(60,10);
+            _cookController.Stop();
           
             _output.Received().OutputLine($"PowerTube turned off");        
         }
@@ -53,7 +53,7 @@ namespace Microwave.Test.Integration
         [Test]
         public void Stop_NoStart_DidNotRecivedOutline()
         {
-            _uut.Stop();
+            _cookController.Stop();
             _output.DidNotReceive().OutputLine($"PowerTube turned off");
         }
 
