@@ -14,13 +14,13 @@ using Timer = MicrowaveOvenClasses.Boundary.Timer;
 namespace Microwave.Test.Integration
 {
     [TestFixture]
-    class IT3_UI_CookController
+    class IT4_UI_Display
     {
         private ITimer _timer;
         private IDisplay _display;
         private IPowerTube _powerTube;
         private IOutput _output;
-        private CookController _cook;
+        private ICookController _cook;
         private IButton _powerButton;
         private IButton _timeButton;
         private IButton _startButton;
@@ -43,38 +43,35 @@ namespace Microwave.Test.Integration
             _door = Substitute.For<IDoor>();
             _light = Substitute.For<ILight>();
             _ui = new UserInterface(_powerButton, _timeButton, _startButton, _door, _display, _light, _cook);
-            _cook.UI = _ui;
         }
 
         [Test]
-        public void OnStartCancelPressed_Default_PowerIs50()
+        public void dkdk_dkkd_dkkd()
+        {
+            _ui.OnPowerPressed(_powerButton,EventArgs.Empty);
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("50")));
+        }
+
+
+        [Test]
+        public void dkdk_dkd_dkkd()
+        {
+            _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
+            _ui.OnTimePressed(_timeButton,EventArgs.Empty);
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("01:00")));
+        }
+
+        [Test]
+        public void dkdk_dkd_dd()
         {
             _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
             _ui.OnTimePressed(_timeButton, EventArgs.Empty);
-
-            _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
-
-            _output.Received().OutputLine($"PowerTube works with {50} %");
+            _ui.OnStartCancelPressed(_startButton,EventArgs.Empty);
+            Thread.Sleep(60500);
+            _output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
         }
 
-        [Test]
-        public void CookingIsDone_hej_hej()
-        {
-            _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
-            _ui.OnTimePressed(_timeButton, EventArgs.Empty);
 
-            _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
-            Thread.Sleep(61000);
 
-            _output.Received(1).OutputLine($"Display cleared");
-        }
-
-        [Test]
-        public void CookingIsDone_StartAfterPowerWithoutTime_DisplayIsCleared()
-        {
-            _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
-            _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
-            _output.Received(1).OutputLine($"Display cleared");
-        }
     }
 }
