@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace Microwave.Test.Integration
 {
     [TestFixture]
-    class IT4_UI_Light
+    class IT7_UI_Light
     {
         private IUserInterface _userInterface;
         private IDoor _door;

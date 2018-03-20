@@ -45,28 +45,54 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void PressPowerButton__PowerIsOn__PowerIsDefault50()
+        public void PressPowerButton__PressPowerOnes__PowerIsDefault50()
         {
             _powerButton.Press();
             _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("50")));
         }
 
         [Test]
-        public void PressTimeButton__TimeIsShown__TimeIsDefault1minut()
+        public void PressPowerButton__PressPowerTwoTimes__PowerIsDefault100()
+        {
+            _powerButton.Press();
+            _powerButton.Press();
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("100")));
+        }
+
+        [Test]
+        public void PressTimeButton__PressTimeOnes__TimeIsDefault1minut()
         {
             _powerButton.Press();
             _timerButton.Press();
             _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("01:00")));
         }
 
-        [Test] // hvorfor går testen igennem hvis vi kun har en startbutton.press()
-        public void PressStartCancelButton_StartAllready_DisplayCleared()
+        [Test]
+        public void PressTimeButton__PressTimeTwoTimes__TimeIsDefault1minut()
+        {
+            _powerButton.Press();
+            _timerButton.Press();
+            _timerButton.Press();
+            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("02:00")));
+        }
+
+        [Test] 
+        public void PressStartCancelButton_StartAndCancelled_DisplayCleared()
         {
             _powerButton.Press();
             _timerButton.Press();
             _startButton.Press();
             _startButton.Press();
-            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+            _output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
+        }
+
+        [Test] 
+        public void PressStartCancelButton_OnlyStart_DidNotDisplayCleared()
+        {
+            _powerButton.Press();
+            _timerButton.Press();
+            _startButton.Press();
+            _output.DidNotReceive().OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
         }
     }
 }
