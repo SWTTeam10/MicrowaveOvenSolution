@@ -54,11 +54,11 @@ namespace Microwave.Test.Integration
 
             _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
 
-            _output.Received().OutputLine($"PowerTube works with {50} %");
+            _output.Received().OutputLine($"PowerTube works with {50} W");
         }
 
         [Test]
-        public void CookingIsDone_hej_hej()
+        public void OnStartCancelPressed_CookingIsDone_DisplayCleared()
         {
             _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
             _ui.OnTimePressed(_timeButton, EventArgs.Empty);
@@ -70,11 +70,37 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void CookingIsDone_StartAfterPowerWithoutTime_DisplayIsCleared()
+        public void OnStartCancelPressed_CancelAfterPower_DisplayIsCleared()
         {
             _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
             _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
             _output.Received(1).OutputLine($"Display cleared");
+        }
+
+        [Test]
+        public void OnDoorOpened_OpenDoorWhileCooking_PowerTurnedOff()
+        {
+            _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
+            _ui.OnTimePressed(_timeButton, EventArgs.Empty);
+
+            _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
+            Thread.Sleep(41000);
+            _ui.OnDoorOpened(_door,EventArgs.Empty);
+
+            _output.Received().OutputLine($"PowerTube turned off");
+        }
+
+        [Test]
+        public void OnStartCancelled_PressStartCancelledWhileCooking_PowerTurnedOff()
+        {
+            _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
+            _ui.OnTimePressed(_timeButton, EventArgs.Empty);
+
+            _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
+            Thread.Sleep(21000);
+            _ui.OnStartCancelPressed(_startButton, EventArgs.Empty);
+
+            _output.Received().OutputLine($"PowerTube turned off");
         }
     }
 }

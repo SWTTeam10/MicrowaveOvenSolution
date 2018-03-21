@@ -20,7 +20,7 @@ namespace Microwave.Test.Integration
         private IDisplay _display;
         private IPowerTube _powerTube;
         private IOutput _output;
-        private ICookController _cook;
+        private CookController _cook;
         private IButton _powerButton;
         private IButton _timeButton;
         private IButton _startButton;
@@ -43,18 +43,18 @@ namespace Microwave.Test.Integration
             _door = Substitute.For<IDoor>();
             _light = Substitute.For<ILight>();
             _ui = new UserInterface(_powerButton, _timeButton, _startButton, _door, _display, _light, _cook);
+            _cook.UI = _ui;
         }
 
         [Test]
-        public void dkdk_dkkd_dkkd()
+        public void OnPowerPressed_DefaultPowerValue_DisplayShows50W()
         {
             _ui.OnPowerPressed(_powerButton,EventArgs.Empty);
             _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("50")));
         }
 
-
         [Test]
-        public void dkdk_dkd_dkkd()
+        public void OnTimePressed_DefaultTimeValuek_DisplayShows1Minut()
         {
             _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
             _ui.OnTimePressed(_timeButton,EventArgs.Empty);
@@ -62,16 +62,13 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void dkdk_dkd_dd()
+        public void OnStartCancelPressed_TimesRunOut_DisplayCleared()
         {
             _ui.OnPowerPressed(_powerButton, EventArgs.Empty);
             _ui.OnTimePressed(_timeButton, EventArgs.Empty);
             _ui.OnStartCancelPressed(_startButton,EventArgs.Empty);
-            Thread.Sleep(60500);
+            _ui.CookingIsDone();
             _output.Received(1).OutputLine(Arg.Is<string>(str => str.Contains("Display cleared")));
         }
-
-
-
     }
 }

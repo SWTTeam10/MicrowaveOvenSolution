@@ -14,7 +14,7 @@ using Timer = MicrowaveOvenClasses.Boundary.Timer;
 namespace Microwave.Test.Integration
 {
     [TestFixture]
-    class IT2_CookController_PowerTube_Timer_Display
+    class IT2_CookController_Timer_Display
     {
         private ITimer _timer;
         private IDisplay _display;
@@ -34,13 +34,13 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void StartCooking_TimerSetAt2Sec_DisplayShows1sec()
+        public void StartCooking_TimesRunOut_PowerTubeTurnedOff()
         {
             _cookController.StartCooking(50, 2); // Tiden står i sekunder
 
-            Thread.Sleep(1050);
+            Thread.Sleep(2050);
 
-            _output.Received().OutputLine(Arg.Is<string>(str => str.Contains("00:01")));
+            _output.Received().OutputLine($"PowerTube turned off");
         }
 
     }

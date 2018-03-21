@@ -13,16 +13,16 @@ using NUnit.Framework.Internal;
 namespace Microwave.Test.Integration
 {
     [TestFixture]
-    class IT5_UI_Door
+    class IT6_UI_Door
     {
-        private IUserInterface _userInterface;
+        private IUserInterface _ui;
         private IDoor _door;
         private IButton _startButton;
         private IButton _timerButton;
         private IButton _powerButton;
         private ILight _light;
         private IOutput _output;
-        private ICookController _cookController;
+        private CookController _cook;
         private IDisplay _display;
         private ITimer _timer;
         private IPowerTube _powerTube;
@@ -40,10 +40,11 @@ namespace Microwave.Test.Integration
             _output = Substitute.For<IOutput>();
             _powerTube = new PowerTube(_output);
             _display = new Display(_output);
-            _cookController = new CookController(_timer, _display, _powerTube);
+            _cook = new CookController(_timer, _display, _powerTube);
             _light = new Light(_output);
-            _userInterface = new UserInterface(_powerButton, _timerButton, _startButton, _door, _display, _light,
-                _cookController);
+            _ui = new UserInterface(_powerButton, _timerButton, _startButton, _door, _display, _light,
+                _cook);
+            _cook.UI = _ui;
         }
 
         [Test]
